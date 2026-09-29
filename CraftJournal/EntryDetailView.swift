@@ -22,6 +22,15 @@ struct EntryDetailView: View {
                 if let date = entry.date {
                     Text(date, style: .date)
                 }
+                
+                //for part A 3 maiking the notes clear in the detail view
+                if let notes = entry.notes, !notes.isEmpty {
+                    Divider()
+                    Text(notes)
+                        .font(.body)
+                }
+                
+                
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding()

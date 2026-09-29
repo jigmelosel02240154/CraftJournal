@@ -12,7 +12,9 @@ struct AddEntryView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var title = ""
     @State private var craftType = crafts[0]
-
+    
+    @State private var notes = "" // added for part A 2
+    
     var body: some View {
         NavigationStack {
             Form {
@@ -22,6 +24,7 @@ struct AddEntryView: View {
                         Text(craft)
                     }
                 }
+                TextField("Notes", text: $notes, axis: .vertical) //for part A 2
             }
             .navigationTitle("New Entry")
             .toolbar {
@@ -42,6 +45,7 @@ struct AddEntryView: View {
         entry.title = title
         entry.craftType = craftType
         entry.date = Date()
+        entry.notes = notes //added this for part A 2
         do {
             try viewContext.save()
             dismiss()
