@@ -4,15 +4,49 @@
 //
 //  Created by iMac18 on 9/29/26.
 //
-
+import CoreData
 import SwiftUI
 
 struct AddEntryView: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
-    }
-}
+    @Environment(\.managedObjectContext) private var viewContext
+    @Environment(\.dismiss) private var dismiss
+    @State private var title = ""
+    @State private var craftType = crafts[0]
 
-#Preview {
-    AddEntryView()
+    var body: some View {
+        NavigationStack {
+            Form {
+                TextField("Title", text: $title)
+                Picker("Craft", selection: $craftType) {
+                    ForEach(crafts, id: \.self) { craft in
+                        Text(craft)
+                    }
+                }
+            }
+            .navigationTitle("New Entry")
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") { dismiss() }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Save") { saveEntry() }
+                        .disabled(title.isEmpty)
+                }
+            }
+        }
+    }
+    
+    private func saveEntry() {
+        let entry = CraftEntry(context: viewContext)
+        entry.id = UUID()
+        entry.title = title
+        entry.craftType = craftType
+        entry.date = Date()
+        do {
+            try viewContext.save()
+            dismiss()
+        } catch {
+            print("Could not save: \(error)")
+        }
+    }
 }
